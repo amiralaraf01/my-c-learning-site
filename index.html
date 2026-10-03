@@ -3,36 +3,86 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>C শেখার সাইট (C Learning Site)</title>
+<title>C শেখার সাইট</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  body{font-family:sans-serif;background:#f4f6fb;margin:0;padding:20px}
-  .box{max-width:380px;margin:40px auto;background:#fff;padding:24px;border-radius:12px;box-shadow:0 2px 10px #0002;text-align:center}
-  input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:8px;font-size:16px}
-  button{width:100%;padding:12px;margin:6px 0;border:0;border-radius:8px;background:#4f46e5;color:#fff;font-size:16px}
-  button.alt{background:#e5e7eb;color:#111}
-  button.guest{background:#059669}
-  #msg{color:#d93025;min-height:1.4em;font-size:14px}
-  hr{border:0;border-top:1px solid #ddd;margin:14px 0}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  font-family:system-ui,"Noto Sans Bengali",sans-serif;color:#fff;overflow:hidden;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='150' viewBox='0 0 110 150'%3E%3Cpath d='M55 8 L82 64 H66 L92 110 H18 L44 64 H28Z' fill='%23051a10' fill-opacity='.55'/%3E%3C/svg%3E"),
+    linear-gradient(160deg,#1f5a3a 0%,#0e2f20 45%,#08141c 100%);
+}
+.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.55;animation:float 14s ease-in-out infinite alternate;pointer-events:none}
+.b1{width:260px;height:260px;background:#c9d36a;top:-60px;left:-70px}
+.b2{width:300px;height:300px;background:#2fa36b;bottom:-90px;right:-90px;animation-delay:-5s}
+.b3{width:200px;height:200px;background:#4d7fb5;top:45%;left:55%;animation-delay:-9s;opacity:.35}
+@keyframes float{to{transform:translate(40px,-50px) scale(1.2)}}
+
+.card{
+  position:relative;width:min(92vw,380px);padding:28px 24px;border-radius:38px;
+  background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.06));
+  backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:0 20px 50px rgba(0,0,0,.35),inset 0 1px 1px rgba(255,255,255,.5),inset 0 -8px 20px rgba(255,255,255,.05);
+}
+h1{margin:0 0 22px;font-size:1.6rem;letter-spacing:.5px}
+.en{opacity:.6;font-size:.85em;font-weight:400}
+input{
+  width:100%;padding:14px 16px;margin:8px 0;font-size:16px;color:#fff;border-radius:14px;outline:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.1));
+  border:1px solid rgba(255,255,255,.4);
+  box-shadow:0 8px 16px rgba(0,0,0,.22),inset 0 1px 1px rgba(255,255,255,.4);
+}
+input::placeholder{color:rgba(255,255,255,.65)}
+input:focus{border-color:#fff}
+button{
+  width:100%;padding:13px;margin:8px 0;font-size:16px;color:#fff;border-radius:14px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.45);
+  background:linear-gradient(135deg,rgba(255,255,255,.35),rgba(255,255,255,.12));
+  box-shadow:0 8px 16px rgba(0,0,0,.2),inset 0 1px 1px rgba(255,255,255,.5);
+}
+button:active{transform:scale(.98)}
+button.main{background:linear-gradient(135deg,rgba(79,70,229,.8),rgba(79,70,229,.45))}
+button.guest{background:linear-gradient(135deg,rgba(5,150,105,.8),rgba(5,150,105,.4))}
+.forgot{text-align:right;font-size:.85rem;opacity:.8;cursor:pointer;margin:2px 4px 6px;text-decoration:underline}
+.or{text-align:center;margin:12px 0;opacity:.7}
+.social{display:flex;justify-content:center;gap:16px;margin:8px 0 14px}
+.social span{
+  width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:18px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.3)
+}
+.g{background:#fff;color:#ea4335}.f{background:#3b5998}.t{background:#1da1f2}
+#msg{min-height:1.4em;text-align:center;font-size:14px;color:#ffd1cc;margin:8px 0 0}
+#welcome{font-size:1.1rem}
 </style>
 </head>
 <body>
-<div class="box">
-  <h1>C শেখার সাইট<br><small>(C Learning Site)</small></h1>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 
+<div class="card">
   <div id="authView">
+    <h1>লগইন <span class="en">(Login)</span></h1>
     <input id="email" type="email" placeholder="ইমেইল (Email)">
-    <input id="password" type="password" placeholder="পাসওয়ার্ড (Password), কমপক্ষে ৬ অক্ষর">
-    <button id="loginBtn">লগইন (Login)</button>
-    <button id="signupBtn" class="alt">নতুন অ্যাকাউন্ট খোলো (Create Account)</button>
-    <hr>
-    <button id="guestBtn" class="guest">অতিথি হিসেবে ঢোকো (Continue as Guest)</button>
+    <input id="password" type="password" placeholder="পাসওয়ার্ড (Password)">
+    <div class="forgot" id="forgotBtn">পাসওয়ার্ড ভুলে গেছ? <span class="en">(Forgot password?)</span></div>
+    <button id="loginBtn" class="main">লগইন <span class="en">(Login)</span></button>
+    <button id="signupBtn">নতুন অ্যাকাউন্ট খোলো <span class="en">(Create Account)</span></button>
+    <div class="or">অথবা <span class="en">(OR)</span></div>
+    <div class="social">
+      <span class="g" id="gBtn">G</span>
+      <span class="f" id="fBtn">f</span>
+      <span class="t" id="tBtn">X</span>
+    </div>
+    <button id="guestBtn" class="guest">অতিথি হিসেবে ঢোকো <span class="en">(Continue as Guest)</span></button>
   </div>
 
   <div id="homeView" hidden>
+    <h1>স্বাগতম <span class="en">(Welcome)</span></h1>
     <p id="welcome"></p>
-    <p>এখানে C প্রোগ্রামিং শেখা যাবে। (Learn C programming here.)</p>
-    <button id="logoutBtn" class="alt">লগআউট (Logout)</button>
+    <p>এখানে C প্রোগ্রামিং শেখা যাবে। <span class="en">(Learn C programming here.)</span></p>
+    <button id="logoutBtn">লগআউট <span class="en">(Logout)</span></button>
   </div>
 
   <p id="msg"></p>
@@ -44,15 +94,26 @@ const db = window.supabase.createClient(
   "sb_publishable_ydN2rXq3y4LkMWPXOA7KcQ_6c9CCF58"
 );
 const $ = id => document.getElementById(id);
-const say = t => $("msg").textContent = t;
+
+function show(el, bn, en, extra){
+  el.textContent = "";
+  el.append(bn + " ");
+  if(en){
+    const s = document.createElement("span");
+    s.className = "en";
+    s.textContent = "(" + en + ")";
+    el.append(s);
+  }
+  if(extra) el.append(" " + extra);
+}
+const say = (bn, en, extra) => show($("msg"), bn, en, extra);
 
 function render(user){
   $("authView").hidden = !!user;
   $("homeView").hidden = !user;
   if(user){
-    $("welcome").textContent = user.is_anonymous
-      ? "স্বাগতম, অতিথি (Welcome, Guest)"
-      : "স্বাগতম (Welcome), " + user.email;
+    if(user.is_anonymous) show($("welcome"), "আপনি অতিথি হিসেবে আছেন।", "You are a guest");
+    else show($("welcome"), user.email, "");
   }
 }
 
@@ -60,7 +121,7 @@ function getCreds(){
   const email = $("email").value.trim();
   const password = $("password").value;
   if(!email || !password){
-    say("ইমেইল ও পাসওয়ার্ড দাও (Enter email and password)");
+    say("ইমেইল ও পাসওয়ার্ড দাও।", "Enter email and password");
     return null;
   }
   return { email, password };
@@ -70,22 +131,39 @@ $("signupBtn").onclick = async () => {
   say("");
   const c = getCreds(); if(!c) return;
   const { error } = await db.auth.signUp(c);
-  say(error ? "সমস্যা (Error): " + error.message
-            : "অ্যাকাউন্ট হয়েছে। ইমেইলের লিংকে চাপ দাও। (Account created. Check your email.)");
+  if(error) say("সমস্যা:", "Error", error.message);
+  else say("অ্যাকাউন্ট হয়েছে। ইমেইলের লিংকে চাপ দাও।", "Account created. Check your email.");
 };
 
 $("loginBtn").onclick = async () => {
   say("");
   const c = getCreds(); if(!c) return;
   const { error } = await db.auth.signInWithPassword(c);
-  if(error) say("সমস্যা (Error): " + error.message);
+  if(error) say("সমস্যা:", "Error", error.message);
 };
 
 $("guestBtn").onclick = async () => {
   say("");
   const { error } = await db.auth.signInAnonymously();
-  if(error) say("সমস্যা (Error): " + error.message);
+  if(error) say("সমস্যা:", "Error", error.message);
 };
+
+$("forgotBtn").onclick = async () => {
+  const email = $("email").value.trim();
+  if(!email){ say("আগে ইমেইল ঘরে ইমেইল লেখো।", "Enter your email first"); return; }
+  const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: location.origin });
+  if(error) say("সমস্যা:", "Error", error.message);
+  else say("ইমেইলে পাসওয়ার্ড বদলানোর লিংক পাঠানো হয়েছে।", "Password reset link sent");
+};
+
+async function social(provider){
+  say("");
+  const { error } = await db.auth.signInWithOAuth({ provider, options:{ redirectTo: location.origin } });
+  if(error) say("এই লগইন এখনো চালু করা হয়নি।", "Not enabled yet", error.message);
+}
+$("gBtn").onclick = () => social("google");
+$("fBtn").onclick = () => social("facebook");
+$("tBtn").onclick = () => social("twitter");
 
 $("logoutBtn").onclick = () => db.auth.signOut();
 
