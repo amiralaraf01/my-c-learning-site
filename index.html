@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>C শেখার সাইট</title>
+<title>C শেখার সাইট (C Learning Site)</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   body{font-family:sans-serif;background:#f4f6fb;margin:0;padding:20px}
@@ -11,24 +11,28 @@
   input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:8px;font-size:16px}
   button{width:100%;padding:12px;margin:6px 0;border:0;border-radius:8px;background:#4f46e5;color:#fff;font-size:16px}
   button.alt{background:#e5e7eb;color:#111}
+  button.guest{background:#059669}
   #msg{color:#d93025;min-height:1.4em;font-size:14px}
+  hr{border:0;border-top:1px solid #ddd;margin:14px 0}
 </style>
 </head>
 <body>
 <div class="box">
-  <h1>C শেখার সাইট</h1>
+  <h1>C শেখার সাইট<br><small>(C Learning Site)</small></h1>
 
   <div id="authView">
-    <input id="email" type="email" placeholder="ইমেইল">
-    <input id="password" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)">
-    <button id="loginBtn">লগইন</button>
-    <button id="signupBtn" class="alt">নতুন অ্যাকাউন্ট খোলো</button>
+    <input id="email" type="email" placeholder="ইমেইল (Email)">
+    <input id="password" type="password" placeholder="পাসওয়ার্ড (Password), কমপক্ষে ৬ অক্ষর">
+    <button id="loginBtn">লগইন (Login)</button>
+    <button id="signupBtn" class="alt">নতুন অ্যাকাউন্ট খোলো (Create Account)</button>
+    <hr>
+    <button id="guestBtn" class="guest">অতিথি হিসেবে ঢোকো (Continue as Guest)</button>
   </div>
 
   <div id="homeView" hidden>
     <p id="welcome"></p>
-    <p>এখানে C প্রোগ্রামিং শেখা যাবে।</p>
-    <button id="logoutBtn" class="alt">লগআউট</button>
+    <p>এখানে C প্রোগ্রামিং শেখা যাবে। (Learn C programming here.)</p>
+    <button id="logoutBtn" class="alt">লগআউট (Logout)</button>
   </div>
 
   <p id="msg"></p>
@@ -45,25 +49,42 @@ const say = t => $("msg").textContent = t;
 function render(user){
   $("authView").hidden = !!user;
   $("homeView").hidden = !user;
-  if(user) $("welcome").textContent = "স্বাগতম, " + user.email;
+  if(user){
+    $("welcome").textContent = user.is_anonymous
+      ? "স্বাগতম, অতিথি (Welcome, Guest)"
+      : "স্বাগতম (Welcome), " + user.email;
+  }
+}
+
+function getCreds(){
+  const email = $("email").value.trim();
+  const password = $("password").value;
+  if(!email || !password){
+    say("ইমেইল ও পাসওয়ার্ড দাও (Enter email and password)");
+    return null;
+  }
+  return { email, password };
 }
 
 $("signupBtn").onclick = async () => {
   say("");
-  const { error } = await db.auth.signUp({
-    email: $("email").value.trim(),
-    password: $("password").value
-  });
-  say(error ? "সমস্যা: " + error.message : "অ্যাকাউন্ট হয়েছে। ইমেইলে আসা লিংকে চাপ দিয়ে ভেরিফাই করো।");
+  const c = getCreds(); if(!c) return;
+  const { error } = await db.auth.signUp(c);
+  say(error ? "সমস্যা (Error): " + error.message
+            : "অ্যাকাউন্ট হয়েছে। ইমেইলের লিংকে চাপ দাও। (Account created. Check your email.)");
 };
 
 $("loginBtn").onclick = async () => {
   say("");
-  const { error } = await db.auth.signInWithPassword({
-    email: $("email").value.trim(),
-    password: $("password").value
-  });
-  if(error) say("সমস্যা: " + error.message);
+  const c = getCreds(); if(!c) return;
+  const { error } = await db.auth.signInWithPassword(c);
+  if(error) say("সমস্যা (Error): " + error.message);
+};
+
+$("guestBtn").onclick = async () => {
+  say("");
+  const { error } = await db.auth.signInAnonymously();
+  if(error) say("সমস্যা (Error): " + error.message);
 };
 
 $("logoutBtn").onclick = () => db.auth.signOut();
