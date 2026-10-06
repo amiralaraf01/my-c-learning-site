@@ -35,9 +35,10 @@ button.guest{background:linear-gradient(135deg,rgba(5,150,105,.8),rgba(5,150,105
 .social img{width:22px;height:22px}
 #msg{min-height:1.2em;text-align:center;font-size:13px;color:#ffd1cc;margin:6px 0 0}
 
-#home{--p:min(calc(100vw / 1080),calc(100dvh / 1920));position:relative;height:100vh;height:100dvh;overflow:hidden;font-family:"Space Mono",monospace;text-transform:uppercase;color:#f8eaea}
+#home{--p:min(calc(100vw / 1080),calc(100dvh / 1920));position:fixed;inset:0;overflow:hidden;font-family:"Space Mono",monospace;text-transform:uppercase;color:#f8eaea}
 #home[hidden]{display:none}
-body.home{background:linear-gradient(160deg,#bb353b 0%,#d9545a 100%)}
+body.home{background:linear-gradient(160deg,#bb353b 0%,#d9545a 100%);overflow:hidden;min-height:0}
+html:has(body.home){overflow:hidden}
 .sig{position:absolute;z-index:3;left:calc(50% - calc(var(--p)*20));top:calc(var(--p)*178);width:calc(var(--p)*336);transform:translateX(-50%)}
 .nav{position:absolute;z-index:3;left:50%;transform:translateX(-50%);top:calc(var(--p)*392);font-size:calc(var(--p)*51);line-height:calc(var(--p)*56);white-space:nowrap}
 .nav a{color:#fff;text-decoration:none}
@@ -125,6 +126,7 @@ function fit(){
   const W=home.clientWidth,H=home.clientHeight; if(!W||!H) return;
   const desk=matchMedia("(min-aspect-ratio:1/1)").matches;
   const p=desk?Math.min(W/736,H/414):Math.min(W/1080,H/1920);
+  home.style.setProperty("--p",p+"px");
   const cfg=desk?HEAD.d:HEAD.m, L=document.querySelectorAll("#home .ln");
   const ctx=(_cv=_cv||document.createElement("canvas")).getContext("2d");
   ctx.font="100px "+getComputedStyle(L[0]).fontFamily;
